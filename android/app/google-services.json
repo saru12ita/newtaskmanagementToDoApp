@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "981708519357",
+    "project_id": "todomanagement-e07d8",
+    "storage_bucket": "todomanagement-e07d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981708519357:android:e8bd2e7ada19476e6284d4",
+        "android_client_info": {
+          "package_name": "com.example.task_management_todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_IpuytZh9Mv1AQr7qrKWRSGGsx51qdmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
