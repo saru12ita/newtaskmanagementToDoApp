@@ -7,7 +7,6 @@ import 'package:task_management_todo/Screens/login_screen.dart';
 import 'package:task_management_todo/Screens/signup_screen.dart';
 import 'package:task_management_todo/Views/onboarding_page.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -30,7 +29,6 @@ class MyApp extends StatelessWidget {
         '/forgot-password': (_) => const ForgotPasswordScreen(),
         '/home': (_) => const HomeScreen(),
       },
-      // Use AuthGate as home
       home: const AuthGate(),
     );
   }

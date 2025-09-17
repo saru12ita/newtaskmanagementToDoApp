@@ -300,6 +300,7 @@ class HomeScreen extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_management_todo/BottomNavScreens/Calendar_Screen.dart';
 import 'package:task_management_todo/BottomNavScreens/Category_screen.dart';
 import 'package:task_management_todo/BottomNavScreens/GraphScreen.dart';
@@ -313,45 +314,65 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Map<String, List<Map<String, dynamic>>> tasksPerDay = {};
+  User? currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = FirebaseAuth.instance.currentUser;
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
+    // Dynamic username: displayName if available, fallback to email prefix
+    final username = currentUser?.displayName ?? currentUser?.email?.split('@')[0] ?? 'User';
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * 0.12),
         child: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.black,
-          elevation: 0,
-          flexibleSpace: Padding(
-            padding: EdgeInsets.only(top: height * 0.05, left: width * 0.05, right: width * 0.05),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text("Vasudev Krishna",
-                        style: GoogleFonts.poppins(
-                            color: Colors.white, fontSize: width * 0.05, fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 6),
-                    Container(
-                      decoration: BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.circular(6)),
-                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
-                      child: Text("to-do",
-                          style: GoogleFonts.poppins(
-                              fontSize: width * 0.03, color: Colors.black, fontWeight: FontWeight.w600)),
-                    ),
-                  ],
-                ),
-                const Icon(Icons.settings, color: Colors.white, size: 26),
-              ],
+  automaticallyImplyLeading: false,
+  backgroundColor: Colors.black,
+  elevation: 0,
+  flexibleSpace: Padding(
+    padding: EdgeInsets.only(top: height * 0.05, left: width * 0.05, right: width * 0.05),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Text("Hi $username",
+                style: GoogleFonts.poppins(
+                    color: Colors.white, fontSize: width * 0.05, fontWeight: FontWeight.bold)),
+            const SizedBox(width: 6),
+            Container(
+              decoration: BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.circular(6)),
+              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+              child: Text("to-do",
+                  style: GoogleFonts.poppins(
+                      fontSize: width * 0.03, color: Colors.black, fontWeight: FontWeight.w600)),
             ),
-          ),
+          ],
         ),
+        // Logout button instead of Settings
+        IconButton(
+          icon: const Icon(Icons.logout, color: Colors.white, size: 26),
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut(); // Sign out from Firebase
+            if (mounted) {
+              Navigator.pushNamedAndRemoveUntil(context, '/onboarding', (route) => false);
+            }
+          },
+        ),
+      ],
+    ),
+  ),
+),
+
       ),
       body: SafeArea(
         child: SingleChildScrollView(

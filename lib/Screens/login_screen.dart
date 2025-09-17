@@ -246,7 +246,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -269,52 +268,25 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // Email/Password Login
   Future<void> _loginWithEmail() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => loading = true);
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
+      String message = e.message ?? "Login failed";
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? "Login failed")),
+        SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
       );
     } finally {
       if (mounted) setState(() => loading = false);
-    }
-  }
-
-  // Google Sign-In
-  Future<void> _signInWithGoogle() async {
-    try {
-      await GoogleSignInPlatform.instance.init(const InitParameters());
-
-      final AuthenticationResults result = await GoogleSignInPlatform.instance
-          .authenticate(const AuthenticateParameters());
-
-      final idToken = result.authenticationTokens.idToken;
-
-      if (idToken != null) {
-        final credential = GoogleAuthProvider.credential(idToken: idToken);
-
-        await FirebaseAuth.instance.signInWithCredential(credential);
-
-        if (!mounted) return;
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to retrieve Google token")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Google Sign-In failed: $e")),
-      );
     }
   }
 
@@ -372,9 +344,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
                     ),
-                    validator: (value) => value!.isEmpty || !value.contains('@')
-                        ? 'Enter valid email'
-                        : null,
+                    validator: (value) =>
+                        value!.isEmpty || !value.contains('@') ? 'Enter valid email' : null,
                   ),
                   const SizedBox(height: 16),
 
@@ -416,7 +387,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
                     ),
-                    validator: (value) => value!.length < 6 ? 'Minimum 6 characters' : null,
+                    validator: (value) =>
+                        value!.length < 6 ? 'Minimum 6 characters' : null,
                   ),
                   const SizedBox(height: 8),
 
@@ -424,9 +396,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/forgot-password');
-                      },
+                      onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(color: Colors.blueGrey),
@@ -441,10 +411,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 50,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 32, 11, 188),
-                          Color.fromARGB(255, 130, 35, 225),
-                        ],
+                        colors: [Color.fromARGB(255, 32, 11, 188), Color.fromARGB(255, 130, 35, 225)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -461,37 +428,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: loading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              'Login',
-                              style: TextStyle(fontSize: 18, color: Colors.black),
-                            ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Divider
-                  Row(
-                    children: const [
-                      Expanded(child: Divider(color: Colors.white24, thickness: 1)),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text("or", style: TextStyle(color: Colors.white70)),
-                      ),
-                      Expanded(child: Divider(color: Colors.white24, thickness: 1)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Google Sign-In Button
-                  OutlinedButton.icon(
-                    onPressed: _signInWithGoogle,
-                    icon: Image.asset('assets/google_logo.png', height: 24, width: 24),
-                    label: const Text('Sign in with Google', style: TextStyle(color: Colors.white)),
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: const Color(0xff1b263b),
-                      side: const BorderSide(color: Colors.white24),
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          : const Text('Login', style: TextStyle(fontSize: 18, color: Colors.black)),
                     ),
                   ),
                   const SizedBox(height: 24),
