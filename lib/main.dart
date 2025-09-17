@@ -6,7 +6,6 @@ import 'package:task_management_todo/Screens/home_screen.dart';
 import 'package:task_management_todo/Screens/login_screen.dart';
 import 'package:task_management_todo/Screens/signup_screen.dart';
 import 'package:task_management_todo/Views/onboarding_page.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

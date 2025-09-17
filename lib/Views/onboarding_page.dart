@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_management_todo/Screens/signup_screen.dart';
 import 'package:task_management_todo/models/onboard_data.dart' show onboardingContents;
-
-
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({Key? key}) : super(key: key);
 
