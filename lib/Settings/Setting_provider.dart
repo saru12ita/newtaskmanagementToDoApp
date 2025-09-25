@@ -1,7 +1,6 @@
 
 
 import 'package:flutter/material.dart';
-
 class SettingsProvider with ChangeNotifier {
   // Dark Mode
   bool _isDarkMode = false;
@@ -27,13 +26,7 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Language
-  String _selectedLanguage = "English";
-  String get selectedLanguage => _selectedLanguage;
-  void changeLanguage(String val) {
-    _selectedLanguage = val;
-    notifyListeners();
-  }
+  
 
   // Clear all tasks (dummy for now, integrate with your task provider)
   void clearAllTasks() {
@@ -42,3 +35,5 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
+

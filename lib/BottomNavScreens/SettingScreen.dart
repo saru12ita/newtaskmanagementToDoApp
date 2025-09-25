@@ -40,14 +40,7 @@ class SettingsScreen extends StatelessWidget {
         "value": settings.isCloudSyncEnabled,
         "action": () => settings.toggleCloudSync(!settings.isCloudSyncEnabled),
       },
-      {
-        "title": "Language",
-        "icon": Icons.language,
-        "type": "dropdown",
-        "value": settings.selectedLanguage,
-        "options": ["English", "Spanish", "Nepali"],
-        "action": (val) => settings.changeLanguage(val),
-      },
+      
     ];
 
     return Scaffold(
